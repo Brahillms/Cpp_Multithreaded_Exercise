@@ -1,6 +1,6 @@
-## C++ Multithreaded Exercise (I think)
+## C++ Multithreaded Exercise
 
-This program prints the values of the numeric constants Pi and Tau to the console on different threads (or at least it should be).
+This program prints the values of the numeric constants Pi and Tau to the console on different threads.
 
 ### What I learned:
 * Basic C++ logic and I/O (since this is my first public C++ project)
