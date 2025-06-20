@@ -3,6 +3,7 @@
 #include <mutex>
 
 #include <sstream>
+#include <chrono>
 
 namespace std::numbers  {
         inline constexpr double tau { pi * 2.0 };
@@ -17,8 +18,10 @@ void test_tau(void)   {
 
         ostringstream oss;
 
-        oss << "Tau: " << numbers::tau << endl;
-        
+        oss << "Tau: " << numbers::tau << "\tThread ID: " << this_thread::get_id() << endl;
+
+	this_thread::sleep_for(chrono::milliseconds(100));
+
         lock_guard<mutex> lock(cout_mutex);
         cout << oss.str();
 }
@@ -27,8 +30,10 @@ void test_pi(void)    {
 
         ostringstream oss2;
 
-        oss2 << "Pi: " << numbers::pi <<  endl;
+        oss2 << "Pi: " << numbers::pi << "\tThread ID: "<< this_thread::get_id() << endl;
         
+	this_thread::sleep_for(chrono::milliseconds(100));
+
         lock_guard<mutex> lock(cout_mutex);
         cout << oss2.str();
 }
@@ -36,11 +41,16 @@ void test_pi(void)    {
 
 int main(void)  {
 
-        thread thread_test_pi(test_pi);
-        thread thread_test_tau(test_tau);
+	auto start = chrono::steady_clock::now();
 
-        thread_test_pi.join();
-        thread_test_tau.join();
+	thread thread_test_pi(test_pi);
+	thread thread_test_tau(test_tau);
+	
+	thread_test_pi.join();
+	thread_test_tau.join();
 
-        return 0;
-}
+	auto end = chrono::steady_clock::now();
+	cout << "Total time: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << endl;
+
+	return 0;
+} 
